@@ -4,15 +4,22 @@ _Springer Nature excercise newsletter webservice_
 ## Problem definition
 Our application manages user subscriptions to newsletters about new book releases. Each book belongs to a set of categories and a user can subscribe to any number of those. Implement an application that provides an HTTP API for manipulating book and subscription data with the following endpoints:
 
-_(with json bodies)_
+### with json bodies
 1. POST /categories
-    *    { "code": "string", "title": "string", "superCategoryCode": "string" or null }
+    * ```javascript
+       { "code": "string", "title": "string", "superCategoryCode": "string" or null }
+       ```
 2. POST /books
-    *    { "title": "string", "categoryCodes": ["code1", "code2", ...] }
+    *  ```javascript
+       { "title": "string", "categoryCodes": ["code1", "code2", ...] }
+       ```
 3. POST /subscribers
-    *    { "email": "string", "categoryCodes": ["code1", "code2", ...] }
+    *  ```javascript
+       { "email": "string", "categoryCodes": ["code1", "code2", ...] }
+       ```
 4. GET /newsletters
 
+### Endpoints
 1. Endpoint should handle category submissions, a category has a unique code, a title and optionally a parent category (e.g. science -> physics)
 2. Endpoint 2. should handle book submissions, a book has a title and a list of category codes of categories to which it belongs to
 3. Endpoint 3. should handle subscriber submissions, a subscriber has an email and a list of category codes of categories for which he/she is interested in
@@ -22,7 +29,6 @@ A subscriber should get notifications for books that belong to the same category
 
 ### Example:
 Given the following category hierarchy:
-
 * science
     * engineering
         * software
@@ -30,26 +36,30 @@ Given the following category hierarchy:
             * object_oriented_programming
 
 If a subscriber is interested in engineering and a book e.g. " Programming in Scala " belongs to the category functional_programming , then one of the categoryPaths for that book in that subscriber's email notification is: 
+```javascript
     ["engineering", "software", "functional_programming"]
-
+```
 if the same book also belongs to the category object_oriented_programming then that same book has also a categoryPath :
+```javascript
     ["engineering", "software", "object_oriented_programming"]
+```
 and the /newsletters response body should be:
-    [
-        {
-            "recipient": "subscriber@email.com",
-            "notifications": [
-                {
-                    "book": "Programming in Scala",
-                    "categoryPaths": [
-                        ["engineering", "software", "functional_programming"],
-                        ["engineering", "software", "object_oriented_programming"]
-                    ]
-                }
-            ]
-        }
-    ]
-
+```javascript
+[
+    {
+        "recipient": "subscriber@email.com",
+        "notifications": [
+            {
+                "book": "Programming in Scala",
+                "categoryPaths": [
+                    ["engineering", "software", "functional_programming"],
+                    ["engineering", "software", "object_oriented_programming"]
+                ]
+            }
+        ]
+    }
+]
+```
 ## Project setup
 Maven project
 
