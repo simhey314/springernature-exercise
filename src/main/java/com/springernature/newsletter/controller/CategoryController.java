@@ -18,11 +18,14 @@
  */
 package com.springernature.newsletter.controller;
 
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  * @author Simon Heyden <simon@family-heyden.net>
  *
  * @since v0.0.1
  */
+@RestController
 public class CategoryController {
 
 }
