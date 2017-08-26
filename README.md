@@ -1,5 +1,5 @@
 # Springer Nature Exercise
-_Springer Nature excercise newsletter webservice_
+_Springer Nature exercise newsletter webservice_
 
 ## Problem definition
 Our application manages user subscriptions to newsletters about new book releases. Each book belongs to a set of categories and a user can subscribe to any number of those. Implement an application that provides an HTTP API for manipulating book and subscription data with the following endpoints:
@@ -61,7 +61,19 @@ and the /newsletters response body should be:
 ]
 ```
 ## Project setup
-Maven project
+Import the Maven project file (pom.xml) into your IDE. The project use the Spring framework. The Spring tools helps your development.
 
-## Project execusion
-Start web application
+## Project execution
+Choose one possible way to start the newsletter web service
+
+* IDE
+    * Run the project (com.springernature.newsletter.NewsletterApplication) class as a _Spring Boot Application_
+* Build/ JAR File
+    * open the command line at project root
+    * _mvnw clean package_
+    * _java -jar target/newsletter-0.1.0.jar_
+* Maven run
+    * open the command line at project root
+    * _mvnw spring-boot:run_
+
+Open the URL http://localhost:8080 in your browser and test the web service as described above
