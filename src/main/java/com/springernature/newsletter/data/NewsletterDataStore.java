@@ -19,11 +19,15 @@
 package com.springernature.newsletter.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.springernature.newsletter.model.Book;
 import com.springernature.newsletter.model.Category;
-import com.springernature.newsletter.model.Subcriber;
+import com.springernature.newsletter.model.Subscriber;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -31,30 +35,46 @@ import com.springernature.newsletter.model.Subcriber;
  * @since v0.0.1
  */
 public class NewsletterDataStore {
-	private static List<Subcriber> subcribers;
-	private static List<Category> categories;
+	private static List<Subscriber> subcribers;
+	private static Map<String, Category> categories;
 	private static List<Book> books;
 
 	static {
 		subcribers = new ArrayList<>();
-		categories = new ArrayList<>();
+		categories = new HashMap<>();
 		books = new ArrayList<>();
 	}
 
-	public static List<Subcriber> getSubcribers() {
+	public static List<Subscriber> getSubcribers() {
 		return subcribers;
 	}
 
-	public static void addSubcriber(final Subcriber aSubcriber) {
+	public static void addSubcriber(final Subscriber aSubcriber) {
 		subcribers.add(aSubcriber);
 	}
 
-	public static List<Category> getCategories() {
+	public static Map<String, Category> getCategories() {
 		return categories;
 	}
 
 	public static void addCategory(final Category aCategory) {
-		categories.add(aCategory);
+		// TODO: check overwriting existing category, handle consistently
+		categories.put(aCategory.getCode(), aCategory);
+	}
+
+	/**
+	 * Get all existing categories by the given codes list
+	 *
+	 * @param categoryCodes
+	 *            to filter
+	 * @return a list of categories
+	 */
+	public static List<Category> getCategoriesByCodes(final List<String> categoryCodes) {
+		if (categoryCodes == null) {
+			return Collections.emptyList();
+		}
+
+		return categories.values().parallelStream().filter(category -> categoryCodes.contains(category.getCode())).collect(Collectors.toList());
 	}
 
 	public static List<Book> getBooks() {

@@ -25,18 +25,19 @@ import java.util.List;
  *
  * @since v0.0.1
  */
-public class Subcriber {
-	private final String emailAdress;
+public class Subscriber {
+
+	private final String email;
 	private final List<Category> categoryCodes;
 
-	public Subcriber(final String emailAdress, final List<Category> categoryCodes) {
+	public Subscriber(final String emailAdress, final List<Category> categoryCodes) {
 		super();
-		this.emailAdress = emailAdress;
+		email = emailAdress;
 		this.categoryCodes = categoryCodes;
 	}
 
 	public String getEmailAdress() {
-		return emailAdress;
+		return email;
 	}
 
 	public List<Category> getCategoryCode() {
