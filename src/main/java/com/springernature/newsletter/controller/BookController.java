@@ -18,7 +18,16 @@
  */
 package com.springernature.newsletter.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.springernature.newsletter.data.NewsletterDataStore;
+import com.springernature.newsletter.model.Book;
+import com.springernature.newsletter.model.Category;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -28,4 +37,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BookController {
 
+	public static class BookInput {
+		private List<String> categoryCodes;
+		private String title;
+
+		public BookInput() {
+		}
+
+		public BookInput(final List<String> categoryCodes, final String title) {
+			super();
+			this.categoryCodes = categoryCodes;
+			this.title = title;
+		}
+
+		public List<String> getCategoryCodes() {
+			return categoryCodes;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+	}
+
+	/**
+	 * create a new book model data from input and add all existing category models by the input codes
+	 *
+	 * @param input
+	 * @return a new book
+	 */
+	@RequestMapping(path = "/books", method = RequestMethod.POST)
+	public Book addBook(@RequestBody(required = true) final BookInput input) {
+
+		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.categoryCodes);
+		final Book newBook = new Book(input.getTitle(), categories);
+
+		NewsletterDataStore.addBook(newBook);
+		return newBook;
+	}
 }

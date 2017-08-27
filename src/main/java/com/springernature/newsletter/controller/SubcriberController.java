@@ -18,7 +18,16 @@
  */
 package com.springernature.newsletter.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.springernature.newsletter.data.NewsletterDataStore;
+import com.springernature.newsletter.model.Category;
+import com.springernature.newsletter.model.Subscriber;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -28,4 +37,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SubcriberController {
 
+	public static class SubcriberInput {
+		private String email;
+		private List<String> categoryCodes;
+
+		public SubcriberInput() {
+			super();
+		}
+
+		public SubcriberInput(final String email, final List<String> categoryCodes) {
+			super();
+			this.email = email;
+			this.categoryCodes = categoryCodes;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public List<String> getCategoryCodes() {
+			return categoryCodes;
+		}
+	}
+
+	/**
+	 * create a new subscriber model data from input and add all existing category models by the input codes
+	 *
+	 * @param input
+	 *            json data
+	 * @return a new subscriber model
+	 */
+	@RequestMapping(path = "/subscribers", method = RequestMethod.POST)
+	public Subscriber addSubscriber(@RequestBody(required = true) final SubcriberInput input) {
+
+		/*
+		 * get the wanted categories from the data store
+		 */
+		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.getCategoryCodes());
+		final Subscriber newSubscriber = new Subscriber(input.getEmail(), categories);
+		NewsletterDataStore.addSubcriber(newSubscriber);
+		return newSubscriber;
+	}
 }

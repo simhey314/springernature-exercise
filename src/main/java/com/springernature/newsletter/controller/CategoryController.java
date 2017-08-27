@@ -18,7 +18,13 @@
  */
 package com.springernature.newsletter.controller;
 
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.springernature.newsletter.data.NewsletterDataStore;
+import com.springernature.newsletter.model.Category;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -28,4 +34,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CategoryController {
 
+	public static class CategoryInput {
+		private String title;
+		private String code;
+		private String superCategoryCode;
+
+		public CategoryInput() {
+		}
+
+		public CategoryInput(final String title, final String code, final String superCategoryCode) {
+			super();
+			this.title = title;
+			this.code = code;
+			this.superCategoryCode = superCategoryCode;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public String getSuperCategoryCode() {
+			return superCategoryCode;
+		}
+	}
+
+	/**
+	 * create a new category and only add an already existing parent category
+	 *
+	 * @param input
+	 *            the category json data
+	 * @return the new category
+	 */
+	@RequestMapping(path = "/categories", method = RequestMethod.POST)
+	public Category addCategory(@RequestBody(required = true) final CategoryInput input) {
+
+		final Category newCategory = new Category(input.getCode(), input.getTitle(), NewsletterDataStore.getCategories().get(input.getSuperCategoryCode()));
+		NewsletterDataStore.addCategory(newCategory);
+		return newCategory;
+	}
 }

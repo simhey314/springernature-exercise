@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springernature.newsletter.data.NewsletterDataStore;
-import com.springernature.newsletter.model.Subcriber;
+import com.springernature.newsletter.model.Subscriber;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -36,7 +36,7 @@ import com.springernature.newsletter.model.Subcriber;
 public class NewsletterController {
 
 	@RequestMapping(path = "/newsletters", method = RequestMethod.GET)
-	public List<Subcriber> getNewsletters() {
+	public List<Subscriber> getNewsletters() {
 		return NewsletterDataStore.getSubcribers();
 	}
 }
