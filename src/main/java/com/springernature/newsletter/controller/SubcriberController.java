@@ -18,6 +18,9 @@
  */
 package com.springernature.newsletter.controller;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,14 +71,12 @@ public class SubcriberController {
 	 * @return a new subscriber model
 	 */
 	@RequestMapping(path = "/subscribers", method = RequestMethod.POST)
-	public Subscriber addSubscriber(@RequestBody(required = true) final SubcriberInput input) {
+	public void addSubscriber(@RequestBody(required = true) final SubcriberInput input) {
+		checkNotNull(input.getCategoryCodes(), "No NULL value allowed");
+		checkArgument(!input.categoryCodes.isEmpty(), "No empty category code list allowed");
 
-		/*
-		 * get the wanted categories from the data store
-		 */
 		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.getCategoryCodes());
 		final Subscriber newSubscriber = new Subscriber(input.getEmail(), categories);
 		NewsletterDataStore.addSubcriber(newSubscriber);
-		return newSubscriber;
 	}
 }

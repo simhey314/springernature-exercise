@@ -29,6 +29,7 @@ import com.springernature.newsletter.data.NewsletterDataStore;
 import com.springernature.newsletter.model.Book;
 import com.springernature.newsletter.model.Category;
 
+import static com.google.common.base.Preconditions.*;
 /**
  * @author Simon Heyden <simon@family-heyden.net>
  *
@@ -66,12 +67,13 @@ public class BookController {
 	 * @return a new book
 	 */
 	@RequestMapping(path = "/books", method = RequestMethod.POST)
-	public Book addBook(@RequestBody(required = true) final BookInput input) {
-
+	public void addBook(@RequestBody(required = true) final BookInput input) {
+		checkNotNull(input.getCategoryCodes(), "No NULL value allowed");
+		checkArgument(!input.categoryCodes.isEmpty(), "No empty category code list allowed");
+				
 		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.categoryCodes);
 		final Book newBook = new Book(input.getTitle(), categories);
 
 		NewsletterDataStore.addBook(newBook);
-		return newBook;
 	}
 }

@@ -70,10 +70,9 @@ public class CategoryController {
 	 * @return the new category
 	 */
 	@RequestMapping(path = "/categories", method = RequestMethod.POST)
-	public Category addCategory(@RequestBody(required = true) final CategoryInput input) {
+	public void addCategory(@RequestBody(required = true) final CategoryInput input) {
 
 		final Category newCategory = new Category(input.getCode(), input.getTitle(), NewsletterDataStore.getCategories().get(input.getSuperCategoryCode()));
 		NewsletterDataStore.addCategory(newCategory);
-		return newCategory;
 	}
 }
