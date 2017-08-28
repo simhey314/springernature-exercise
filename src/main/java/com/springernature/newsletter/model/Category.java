@@ -18,6 +18,9 @@
  */
 package com.springernature.newsletter.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Simon Heyden <simon@family-heyden.net>
  *
@@ -51,6 +54,15 @@ public class Category {
 
 	public String getCode() {
 		return code;
+	}
+	
+	public List<Category> getCategoryPath(){
+		List<Category> result = new ArrayList<>();
+		result.add(this);
+		if (parent != null) {
+			result.addAll(parent.getCategoryPath());
+		}
+		return result;
 	}
 
 	@Override

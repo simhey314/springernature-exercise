@@ -18,7 +18,13 @@
  */
 package com.springernature.newsletter.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -26,8 +32,12 @@ import java.util.List;
  * @since v0.0.1
  */
 public class Book {
-	private final String title;
-	private final List<Category> categoryCodes;
+	
+	@JsonProperty("book")
+	private String title;
+	
+	@JsonIgnore
+	private List<Category> categoryCodes;
 
 	public Book(final String title, final List<Category> categoryCodes) {
 		super();
@@ -42,5 +52,15 @@ public class Book {
 	public List<Category> getCategoryCodes() {
 		return categoryCodes;
 	}
-
+	
+	@JsonProperty("categoryPaths")
+	@JsonValue
+	public List<List<String>> getCategoryPaths(){
+		List<List<String>> result = new ArrayList<>();
+		
+		
+		
+		
+		return result;
+	}
 }

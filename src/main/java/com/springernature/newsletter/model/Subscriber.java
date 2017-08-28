@@ -18,7 +18,12 @@
  */
 package com.springernature.newsletter.model;
 
+import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -27,11 +32,13 @@ import java.util.List;
  */
 public class Subscriber {
 
-	private final String email;
-	private final List<Category> categoryCodes;
+	@JsonProperty("recipient”")
+	private String email;
+	
+	@JsonIgnore
+	private List<Category> categoryCodes;
 
 	public Subscriber(final String emailAdress, final List<Category> categoryCodes) {
-		super();
 		email = emailAdress;
 		this.categoryCodes = categoryCodes;
 	}
@@ -42,5 +49,11 @@ public class Subscriber {
 
 	public List<Category> getCategoryCode() {
 		return categoryCodes;
+	}
+	
+	@JsonProperty("notifications")
+	@JsonValue
+	public List<Book> getNotifications(){
+		return Collections.emptyList();
 	}
 }
