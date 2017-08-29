@@ -23,19 +23,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.nio.charset.Charset;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.springernature.newsletter.NewsletterApplication;
+import com.springernature.newsletter.data.NewsletterDataStore;
+import com.springernature.newsletter.model.Category;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -50,12 +49,9 @@ public class BookControllerTest {
 	private static final String REQUEST_JSON_PATTERN = "{ \"title\": \"%s\", \"categoryCodes\": %s }";
 	private static final String BOOK_JSON_COMPLETE = String.format(REQUEST_JSON_PATTERN, "Erstes Buch", "[\"code1\"]");
 	private static final String BOOK_JSON_NULL_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "Erstes Buch", "null");
-	private static final String BOOK_JSON_EMPTY_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "Erstes Buch", "[]");;
-	private static final String BOOK_JSON_NULL_TITLE = String.format(REQUEST_JSON_PATTERN, "null", "[\"code1\"]");;
-	private static final String BOOK_JSON_EMPTY_TITLE = String.format(REQUEST_JSON_PATTERN, "   ", "[\"code1\"]");;
-
-	private final MediaType contentTypeJSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(),
-			Charset.forName("utf8"));
+	private static final String BOOK_JSON_EMPTY_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "Erstes Buch", "[]");
+	private static final String BOOK_JSON_EMPTY_TITLE = String.format(REQUEST_JSON_PATTERN, "", "[\"code1\"]");
+	private static final String BOOK_JSON_WHITSPACES_TITLE = String.format(REQUEST_JSON_PATTERN, "   ", "[\"code1\"]");
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -63,6 +59,8 @@ public class BookControllerTest {
 
 	private void setUp() throws Exception {
 		mockMvc = webAppContextSetup(webApplicationContext).build();
+		NewsletterDataStore.resetData();
+		NewsletterDataStore.addCategory(new Category("code1", "title1"));
 	}
 
 	/**
@@ -72,17 +70,18 @@ public class BookControllerTest {
 	public void testAddBook() throws Exception {
 		setUp();
 
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_COMPLETE).contentType(contentTypeJSON)).andExpect(status().isOk());
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_COMPLETE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		        .andExpect(status().isOk());
 
 		mockMvc.perform(get(BookController.REQUEST_PATH_BOOKS)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS)).andExpect(status().is4xxClientError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_CATEGORIES).contentType(contentTypeJSON))
-		.andExpect(status().is5xxServerError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_CATEGORIES).contentType(contentTypeJSON))
-		.andExpect(status().is5xxServerError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_TITLE).contentType(contentTypeJSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_TITLE).contentType(contentTypeJSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		.andExpect(status().is4xxClientError());
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_TITLE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		.andExpect(status().is4xxClientError());
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_WHITSPACES_TITLE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 	}
 

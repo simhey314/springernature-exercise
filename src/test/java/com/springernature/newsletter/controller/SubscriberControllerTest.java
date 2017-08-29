@@ -23,19 +23,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import java.nio.charset.Charset;
-
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.springernature.newsletter.NewsletterApplication;
+import com.springernature.newsletter.data.NewsletterDataStore;
+import com.springernature.newsletter.model.Category;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -47,15 +48,15 @@ import com.springernature.newsletter.NewsletterApplication;
 @WebAppConfiguration
 public class SubscriberControllerTest {
 
-	private static final String REQUEST_JSON_PATTERN = "{ \"email\": \"%s\", \"categoryCodes\": %s }";
-	private static final String JSON_COMPLETE = String.format(REQUEST_JSON_PATTERN, "muster@email.de", "[\"code1\"]");
-	private static final String JSON_NULL_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "muster@email.de", "null");
-	private static final String JSON_EMPTY_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "muster@email.de", "[]");;
-	private static final String JSON_NULL_EMAIL = String.format(REQUEST_JSON_PATTERN, "null", "[\"code1\"]");;
-	private static final String JSON_EMPTY_EMAIL = String.format(REQUEST_JSON_PATTERN, "   ", "[\"code1\"]");;
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
-	private final MediaType contentTypeJSON = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(),
-			Charset.forName("utf8"));
+	private static final String REQUEST_JSON_PATTERN = "{ \"email\": %s, \"categoryCodes\": %s }";
+	private static final String JSON_COMPLETE = String.format(REQUEST_JSON_PATTERN, "\"muster@email.de\"", "[\"code1\"]");
+	private static final String JSON_NULL_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "\"muster@email.de\"", "null");
+	private static final String JSON_EMPTY_CATEGORIES = String.format(REQUEST_JSON_PATTERN, "\"muster@email.de\"", "[]");
+	private static final String JSON_NULL_EMAIL = String.format(REQUEST_JSON_PATTERN, "null", "[\"code1\"]");
+	private static final String JSON_WHITESPACES_EMAIL = String.format(REQUEST_JSON_PATTERN, "   ", "[\"code1\"]");
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -63,6 +64,8 @@ public class SubscriberControllerTest {
 
 	private void setUp() throws Exception {
 		mockMvc = webAppContextSetup(webApplicationContext).build();
+		NewsletterDataStore.resetData();
+		NewsletterDataStore.addCategory(new Category("code1", "title1"));
 	}
 
 	/**
@@ -73,17 +76,18 @@ public class SubscriberControllerTest {
 	public void testAddSubscriber() throws Exception {
 		setUp();
 
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_COMPLETE).contentType(contentTypeJSON)).andExpect(status().isOk());
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_COMPLETE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON)).andExpect(status().isOk());
 
 		mockMvc.perform(get(SubscriberController.REQUEST_PATH_SUBSCRIBER)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER)).andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_CATEGORIES).contentType(contentTypeJSON))
+
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_EMPTY_CATEGORIES).contentType(contentTypeJSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_EMPTY_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_EMAIL).contentType(contentTypeJSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_EMAIL).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_EMPTY_EMAIL).contentType(contentTypeJSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_WHITESPACES_EMAIL).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 	}
 

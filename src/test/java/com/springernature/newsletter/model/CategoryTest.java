@@ -18,12 +18,15 @@
  */
 package com.springernature.newsletter.model;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -31,6 +34,9 @@ import org.junit.Test;
  * @since v0.0.2
  */
 public class CategoryTest {
+
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
 
 	private static final String TITLE_VALUE = "title value";
 	private static final String TITLE_FIRST = "title value first";
@@ -48,6 +54,72 @@ public class CategoryTest {
 		rootCategory = new Category(CODE_ONE, TITLE_FIRST);
 		middleCategory = new Category(CODE_TWO, TITLE_MIDDLE, rootCategory);
 		lastCategory = new Category(CODE_THREE, TITLE_LAST, middleCategory);
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.model.Category#Category(String, String)}.
+	 */
+	@Test
+	public void testCategoryContructorTitleNull() {
+		exception.expect(NullPointerException.class);
+		exception.expectMessage(is(Category.NO_NULL_TITLE_ALLOWED));
+
+		new Category(CODE_ONE, null);
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.model.Category#Category(String, String)}.
+	 */
+	@Test
+	public void testCategoryContructorTitleWhitespaces() {
+		exception.expect(IllegalArgumentException.class);
+		exception.expectMessage(is(Category.NO_WHITESPACE_TITLE_ALLOWED));
+
+		new Category(CODE_ONE, "   ");
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.model.Category#Category(String, String)}.
+	 */
+	@Test
+	public void testCategoryContructorTitleEmpty() {
+		exception.expect(IllegalArgumentException.class);
+		exception.expectMessage(is(Category.NO_EMPTY_TITLE_ALLOWED));
+
+		new Category(CODE_ONE, "");
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.model.Category#Category(String, String)}.
+	 */
+	@Test
+	public void testCategoryContructorCodeEmpty() {
+		exception.expect(IllegalArgumentException.class);
+		exception.expectMessage(is(Category.NO_EMPTY_CODE_ALLOWED));
+
+		new Category("", TITLE_VALUE);
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.model.Category#Category(String, String)}.
+	 */
+	@Test
+	public void testCategoryContructorCodeWhitespaces() {
+		exception.expect(IllegalArgumentException.class);
+		exception.expectMessage(is(Category.NO_WHITESPACE_CODE_ALLOWED));
+
+		new Category("   ", TITLE_VALUE);
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.model.Category#Category(String, String)}.
+	 */
+	@Test
+	public void testCategoryContructorCodeNull() {
+		exception.expect(NullPointerException.class);
+		exception.expectMessage(is(Category.NO_NULL_CODE_ALLOWED));
+
+		new Category(null, TITLE_VALUE);
 	}
 
 	/**

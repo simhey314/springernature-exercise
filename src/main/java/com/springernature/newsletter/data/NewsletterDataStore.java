@@ -52,7 +52,7 @@ public class NewsletterDataStore {
 	}
 
 	@VisibleForTesting
-	protected static void resetData() {
+	public static void resetData() {
 		subcribers.clear();
 		categories.clear();
 		books.clear();

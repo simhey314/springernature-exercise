@@ -41,6 +41,7 @@ import com.springernature.newsletter.model.Category;
 public class BookController {
 
 	public static final String REQUEST_PATH_BOOKS = "/books";
+	public static final String NO_EXISTING_CATEGORIES = "No existing categories";
 
 	public static class BookInput {
 		private List<String> categoryCodes;
@@ -72,14 +73,17 @@ public class BookController {
 	 */
 	@RequestMapping(path = REQUEST_PATH_BOOKS, method = RequestMethod.POST)
 	public void addBook(@RequestBody(required = true) final BookInput input) {
-		checkNotNull(input.getCategoryCodes(), "No NULL value allowed");
-		checkArgument(!input.categoryCodes.isEmpty(), "No empty category code list allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getTitle()), "No empty title allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getTitle().trim()), "No whitespace title allowed");
+		checkNotNull(input.getCategoryCodes(), Book.NO_NULL_CATEGORIES);
+		checkArgument(!input.categoryCodes.isEmpty(), Book.NO_EMPTY_CATEGORIES);
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle()), Book.NO_EMPTY_TITLE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle().trim()), Book.NO_WHITESPACE_TITLE_ALLOWED);
 
-		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.categoryCodes);
-		final Book newBook = new Book(input.getTitle(), categories);
-
-		NewsletterDataStore.addBook(newBook);
+		final List<Category> existingCategories = NewsletterDataStore.getCategoriesByCodes(input.categoryCodes);
+		if (!existingCategories.isEmpty()) {
+			final Book newBook = new Book(input.getTitle(), existingCategories);
+			NewsletterDataStore.addBook(newBook);
+		} else {
+			throw new IllegalStateException(NO_EXISTING_CATEGORIES);
+		}
 	}
 }
