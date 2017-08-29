@@ -77,13 +77,13 @@ public class BookControllerTest {
 		mockMvc.perform(get(BookController.REQUEST_PATH_BOOKS)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_CATEGORIES).contentType(contentTypeJSON))
-		        .andExpect(status().is4xxClientError());
+		.andExpect(status().is5xxServerError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_CATEGORIES).contentType(contentTypeJSON))
-		        .andExpect(status().is4xxClientError());
+		.andExpect(status().is5xxServerError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_TITLE).contentType(contentTypeJSON))
-		        .andExpect(status().is4xxClientError());
+		.andExpect(status().is4xxClientError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_TITLE).contentType(contentTypeJSON))
-		        .andExpect(status().is4xxClientError());
+		.andExpect(status().is4xxClientError());
 	}
 
 }

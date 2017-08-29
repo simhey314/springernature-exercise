@@ -18,7 +18,25 @@
  */
 package com.springernature.newsletter.data;
 
+import static com.springernature.newsletter.data.NewsletterDataStoreTestHelper.CATEGORY_CODE_01;
+import static com.springernature.newsletter.data.NewsletterDataStoreTestHelper.CATEGORY_CODE_03_2;
+import static com.springernature.newsletter.data.NewsletterDataStoreTestHelper.setUpDatastore;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import com.springernature.newsletter.model.Category;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -27,22 +45,103 @@ import org.junit.Test;
  */
 public class NewsletterDataStoreTest {
 
+	private static final String CATEGORY_CODE_EMPTY = "";
+	private static final String CATEGORY_CODE_NO_MATCH = "no match";
+
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
+
 	/**
 	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#getCategoriesByCodes(java.util.List)}.
 	 */
 	@Test
-	public void testGetCategoriesByCodes() throws Exception {
-		// TODO
-		throw new RuntimeException("not yet implemented");
+	public void testCategoriesByCodesEmptyFilterList() {
+		setUpDatastore();
+
+		final List<?> toTestData = NewsletterDataStore.getCategoriesByCodes(new ArrayList<>());
+
+		assertFalse(toTestData == null);
+		assertTrue(toTestData.isEmpty());
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#getCategoriesByCodes(java.util.List)}.
+	 */
+	@Test
+	public void testCategoriesByCodesNoMatch() {
+		setUpDatastore();
+
+		final List<Category> toTestData = NewsletterDataStore.getCategoriesByCodes(Arrays.asList(CATEGORY_CODE_EMPTY, CATEGORY_CODE_NO_MATCH));
+
+		assertFalse(toTestData == null);
+		assertTrue(toTestData.isEmpty());
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#getCategoriesByCodes(java.util.List)}.
+	 */
+	@Test
+	public void testCategoriesByCodesMatches() {
+		setUpDatastore();
+
+		final List<Category> toTestData = NewsletterDataStore.getCategoriesByCodes(Arrays.asList(CATEGORY_CODE_01, CATEGORY_CODE_03_2, CATEGORY_CODE_NO_MATCH));
+
+		assertFalse(toTestData == null);
+		assertEquals(2, toTestData.size());
+		assertThat(toTestData.get(0).getCode(), anyOf(is(CATEGORY_CODE_01), is(CATEGORY_CODE_03_2)));
+		assertThat(toTestData.get(1).getCode(), anyOf(is(CATEGORY_CODE_01), is(CATEGORY_CODE_03_2)));
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#getCategoriesByCodes(java.util.List)}.
+	 */
+	@Test
+	public void testCategoriesByCodesExceptions() {
+		exception.expect(NullPointerException.class);
+		exception.expectMessage(is(NewsletterDataStore.NO_NULL_VALUE_ALLOWED));
+
+		NewsletterDataStore.getCategoriesByCodes(null);
 	}
 
 	/**
 	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#getBooksByCategories(java.util.List)}.
 	 */
 	@Test
-	public void testGetBooksByCategories() throws Exception {
-		// TODO
-		throw new RuntimeException("not yet implemented");
+	public void testGetBooksByCategories() {
+
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#addBook(com.springernature.newsletter.model.Book)}.
+	 */
+	@Test
+	public void testAddBookNullVallue() throws Exception {
+		exception.expect(NullPointerException.class);
+		exception.expectMessage(is(NewsletterDataStore.NO_NULL_VALUE_ALLOWED));
+
+		NewsletterDataStore.addBook(null);
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#addCategory(Category)}.
+	 */
+	@Test
+	public void testAddCategoryNullVallue() throws Exception {
+		exception.expect(NullPointerException.class);
+		exception.expectMessage(is(NewsletterDataStore.NO_NULL_VALUE_ALLOWED));
+
+		NewsletterDataStore.addCategory(null);
+	}
+
+	/**
+	 * Test method for {@link com.springernature.newsletter.data.NewsletterDataStore#addSubscriber(com.springernature.newsletter.model.Subscriber)}.
+	 */
+	@Test
+	public void testAddSubscriberNullVallue() throws Exception {
+		exception.expect(NullPointerException.class);
+		exception.expectMessage(is(NewsletterDataStore.NO_NULL_VALUE_ALLOWED));
+
+		NewsletterDataStore.addSubscriber(null);
 	}
 
 }

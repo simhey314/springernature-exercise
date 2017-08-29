@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.springernature.newsletter.model.Book;
 import com.springernature.newsletter.model.Category;
 import com.springernature.newsletter.model.Subscriber;
@@ -38,6 +39,8 @@ import com.springernature.newsletter.model.Subscriber;
  * @since v0.0.1
  */
 public class NewsletterDataStore {
+
+	public static final String NO_NULL_VALUE_ALLOWED = "No NULL value allowed";
 	private static List<Subscriber> subcribers;
 	private static Map<String, Category> categories;
 	private static List<Book> books;
@@ -48,12 +51,19 @@ public class NewsletterDataStore {
 		books = new ArrayList<>();
 	}
 
+	@VisibleForTesting
+	protected static void resetData() {
+		subcribers.clear();
+		categories.clear();
+		books.clear();
+	}
+
 	public static List<Subscriber> getSubcribers() {
 		return subcribers;
 	}
 
-	public static void addSubcriber(final Subscriber aSubcriber) {
-		checkNotNull(aSubcriber, "No NULL value allowed");
+	public static void addSubscriber(final Subscriber aSubcriber) {
+		checkNotNull(aSubcriber, NO_NULL_VALUE_ALLOWED);
 		subcribers.add(aSubcriber);
 	}
 
@@ -62,7 +72,7 @@ public class NewsletterDataStore {
 	}
 
 	public static void addCategory(final Category aCategory) {
-		checkNotNull(aCategory, "No NULL value allowed");
+		checkNotNull(aCategory, NO_NULL_VALUE_ALLOWED);
 		// TODO: check overwriting existing category, handle consistently
 		categories.put(aCategory.getCode(), aCategory);
 	}
@@ -77,7 +87,7 @@ public class NewsletterDataStore {
 	 *             if category codes is null
 	 */
 	public static List<Category> getCategoriesByCodes(final List<String> categoryCodes) {
-		checkNotNull(categoryCodes, "No NULL value allowed");
+		checkNotNull(categoryCodes, NO_NULL_VALUE_ALLOWED);
 
 		return categories.values().parallelStream().filter(category -> categoryCodes.contains(category.getCode())).collect(Collectors.toList());
 	}
@@ -92,7 +102,7 @@ public class NewsletterDataStore {
 	 *             if category list is empty
 	 */
 	public static List<Book> getBooksByCategories(final List<Category> categories) {
-		checkNotNull(categories, "No NULL value allowed");
+		checkNotNull(categories, NO_NULL_VALUE_ALLOWED);
 		checkArgument(!categories.isEmpty(), "No empty category list allowed");
 
 		/*
@@ -105,8 +115,8 @@ public class NewsletterDataStore {
 		final Predicate<List<Category>> categoryPathListMatcher = categoryPathList -> categoryPathList.parallelStream().anyMatch(categoryPathMatcher);
 
 		return books.parallelStream()
-		        .filter(book -> book.getCategoryCodes().parallelStream().map(category -> category.getCategoryPath()).anyMatch(categoryPathListMatcher))
-		        .collect(Collectors.toList());
+				.filter(book -> book.getCategoryCodes().parallelStream().map(category -> category.getCategoryPath()).anyMatch(categoryPathListMatcher))
+				.collect(Collectors.toList());
 	}
 
 	public static List<Book> getBooks() {
@@ -114,7 +124,7 @@ public class NewsletterDataStore {
 	}
 
 	public static void addBook(final Book aBook) {
-		checkNotNull(aBook, "No NULL value allowed");
+		checkNotNull(aBook, NO_NULL_VALUE_ALLOWED);
 		books.add(aBook);
 	}
 }

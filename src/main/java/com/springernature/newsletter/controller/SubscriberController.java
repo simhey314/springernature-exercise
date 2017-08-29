@@ -21,7 +21,6 @@ package com.springernature.newsletter.controller;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,6 +82,6 @@ public class SubscriberController {
 
 		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.getCategoryCodes());
 		final Subscriber newSubscriber = new Subscriber(input.getEmail(), categories);
-		NewsletterDataStore.addSubcriber(newSubscriber);
+		NewsletterDataStore.addSubscriber(newSubscriber);
 	}
 }
