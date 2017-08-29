@@ -19,6 +19,7 @@
 package com.springernature.newsletter.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
@@ -33,6 +34,12 @@ import com.google.common.base.Strings;
  */
 public class Book {
 
+	public static final String NO_WHITESPACE_TITLE_ALLOWED = "No whitespace title allowed";
+	public static final String NO_EMPTY_TITLE_ALLOWED = "No empty title allowed";
+	public static final String NO_NULL_CATEGORIES = "No NULL for category codes alllowed";
+	public static final String NO_NULL_TITLE = "No NULL for title allowed";
+	public static final String NO_EMPTY_CATEGORIES = "No epmty category codes allowed";
+
 	@JsonProperty("book")
 	private final String title;
 
@@ -40,8 +47,11 @@ public class Book {
 	private final List<Category> categoryCodes;
 
 	public Book(final String title, final List<Category> categoryCodes) {
-		checkArgument(!Strings.isNullOrEmpty(title), "No empty title allowed");
-		checkArgument(!Strings.isNullOrEmpty(title.trim()), "No whitespace title allowed");
+		checkNotNull(title, NO_NULL_TITLE);
+		checkArgument(!Strings.isNullOrEmpty(title), NO_EMPTY_TITLE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(title.trim()), NO_WHITESPACE_TITLE_ALLOWED);
+		checkNotNull(categoryCodes, NO_NULL_CATEGORIES);
+		checkArgument(!categoryCodes.isEmpty(), NO_EMPTY_CATEGORIES);
 
 		this.title = title;
 		this.categoryCodes = categoryCodes;

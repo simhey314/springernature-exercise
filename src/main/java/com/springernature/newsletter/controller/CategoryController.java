@@ -37,6 +37,8 @@ import com.springernature.newsletter.model.Category;
 @RestController
 public class CategoryController {
 
+	public static final String REQUEST_PATH_CATEGORIES = "/categories";
+
 	public static class CategoryInput {
 		private String title;
 		private String code;
@@ -46,7 +48,6 @@ public class CategoryController {
 		}
 
 		public CategoryInput(final String title, final String code, final String superCategoryCode) {
-			super();
 			this.title = title;
 			this.code = code;
 			this.superCategoryCode = superCategoryCode;
@@ -72,12 +73,12 @@ public class CategoryController {
 	 *            the category json data
 	 * @return the new category
 	 */
-	@RequestMapping(path = "/categories", method = RequestMethod.POST)
+	@RequestMapping(path = REQUEST_PATH_CATEGORIES, method = RequestMethod.POST)
 	public void addCategory(@RequestBody(required = true) final CategoryInput input) {
-		checkArgument(!Strings.isNullOrEmpty(input.getCode()), "No empty code allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getCode().trim()), "No whitespace code allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getTitle()), "No empty title allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getTitle().trim()), "No whitespace title allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getCode()), Category.NO_EMPTY_CODE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(input.getCode().trim()), Category.NO_WHITESPACE_CODE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle()), Category.NO_EMPTY_TITLE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle().trim()), Category.NO_WHITESPACE_TITLE_ALLOWED);
 
 		final Category newCategory = new Category(input.getCode(), input.getTitle(), NewsletterDataStore.getCategories().get(input.getSuperCategoryCode()));
 		NewsletterDataStore.addCategory(newCategory);

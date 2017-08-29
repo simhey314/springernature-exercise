@@ -19,6 +19,7 @@
 package com.springernature.newsletter.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +37,12 @@ import com.google.common.base.Strings;
  */
 public class Category {
 
+	public static final String NO_WHITESPACE_TITLE_ALLOWED = "No whitespace title allowed";
+	public static final String NO_EMPTY_TITLE_ALLOWED = "No empty title allowed";
+	public static final String NO_WHITESPACE_CODE_ALLOWED = "No whitespace code allowed";
+	public static final String NO_EMPTY_CODE_ALLOWED = "No empty code allowed";
+	public static final String NO_NULL_CODE_ALLOWED = "No NULL for code allowed";
+	public static final String NO_NULL_TITLE_ALLOWED = "No NULL for title allowed";
 	@JsonIgnore
 	private final String code;
 	@JsonIgnore
@@ -48,10 +55,12 @@ public class Category {
 	}
 
 	public Category(final String code, final String title, final Category parent) {
-		checkArgument(!Strings.isNullOrEmpty(code), "No empty code allowed");
-		checkArgument(!Strings.isNullOrEmpty(code.trim()), "No whitespace code allowed");
-		checkArgument(!Strings.isNullOrEmpty(title), "No empty title allowed");
-		checkArgument(!Strings.isNullOrEmpty(title.trim()), "No whitespace title allowed");
+		checkNotNull(code, NO_NULL_CODE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(code), NO_EMPTY_CODE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(code.trim()), NO_WHITESPACE_CODE_ALLOWED);
+		checkNotNull(title, NO_NULL_TITLE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(title), NO_EMPTY_TITLE_ALLOWED);
+		checkArgument(!Strings.isNullOrEmpty(title.trim()), NO_WHITESPACE_TITLE_ALLOWED);
 
 		this.code = code;
 		this.title = title;

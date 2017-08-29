@@ -65,6 +65,7 @@ public class SubscriberController {
 	}
 
 	public static final String REQUEST_PATH_SUBSCRIBER = "/subscribers";
+	private static final String NO_EXISTING_CATEGORIES = "No existing categoires";
 
 	/**
 	 * create a new subscriber model data from input and add all existing category models by the input codes
@@ -75,13 +76,18 @@ public class SubscriberController {
 	 */
 	@RequestMapping(path = REQUEST_PATH_SUBSCRIBER, method = RequestMethod.POST)
 	public void addSubscriber(@RequestBody(required = true) final SubcriberInput input) {
-		checkNotNull(input.getCategoryCodes(), "No NULL value allowed");
-		checkArgument(!input.categoryCodes.isEmpty(), "No empty category code list allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getEmail()), "No empty email allowed");
-		checkArgument(!Strings.isNullOrEmpty(input.getEmail().trim()), "No whitespace email allowed");
+		checkNotNull(input.getCategoryCodes(), Subscriber.NO_NULL_CATEGORIES);
+		checkArgument(!input.categoryCodes.isEmpty(), Subscriber.NO_EMPTY_CATEGORIES);
+		checkArgument(!Strings.isNullOrEmpty(input.getEmail()), Subscriber.NO_EMPTY_EMAIL);
+		checkArgument(!Strings.isNullOrEmpty(input.getEmail().trim()), Subscriber.NO_WHITESPACE_EMAIL);
 
-		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.getCategoryCodes());
-		final Subscriber newSubscriber = new Subscriber(input.getEmail(), categories);
-		NewsletterDataStore.addSubscriber(newSubscriber);
+		final List<Category> existingCategories = NewsletterDataStore.getCategoriesByCodes(input.getCategoryCodes());
+
+		if (!existingCategories.isEmpty()) {
+			final Subscriber newSubscriber = new Subscriber(input.getEmail(), existingCategories);
+			NewsletterDataStore.addSubscriber(newSubscriber);
+		} else {
+			throw new IllegalStateException(NO_EXISTING_CATEGORIES);
+		}
 	}
 }

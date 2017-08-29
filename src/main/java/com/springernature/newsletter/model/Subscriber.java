@@ -19,6 +19,7 @@
 package com.springernature.newsletter.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
@@ -34,6 +35,16 @@ import com.springernature.newsletter.data.NewsletterDataStore;
  */
 public class Subscriber {
 
+	public static final String NO_WHITESPACE_EMAIL = "No whitespace email allowed";
+
+	public static final String NO_EMPTY_EMAIL = "No empty email allowed";
+
+	public static final String NO_NULL_EMAIL = "No NULL for email allowed";
+
+	public static final String NO_NULL_CATEGORIES = "No NULL for category codes allowed";
+
+	public static final String NO_EMPTY_CATEGORIES = "No empty category codes allowed";
+
 	@JsonProperty("recipient")
 	private final String email;
 
@@ -41,8 +52,11 @@ public class Subscriber {
 	private final List<Category> categoryCodes;
 
 	public Subscriber(final String emailAdress, final List<Category> categoryCodes) {
-		checkArgument(!Strings.isNullOrEmpty(emailAdress), "No empty email allowed");
-		checkArgument(!Strings.isNullOrEmpty(emailAdress.trim()), "No whitespace email allowed");
+		checkNotNull(emailAdress, NO_NULL_EMAIL);
+		checkArgument(!Strings.isNullOrEmpty(emailAdress), NO_EMPTY_EMAIL);
+		checkArgument(!Strings.isNullOrEmpty(emailAdress.trim()), NO_WHITESPACE_EMAIL);
+		checkNotNull(categoryCodes, NO_NULL_CATEGORIES);
+		checkArgument(!categoryCodes.isEmpty(), NO_EMPTY_CATEGORIES);
 
 		email = emailAdress;
 		this.categoryCodes = categoryCodes;
