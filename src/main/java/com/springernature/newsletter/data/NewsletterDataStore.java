@@ -18,11 +18,14 @@
  */
 package com.springernature.newsletter.data;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.springernature.newsletter.model.Book;
@@ -50,6 +53,7 @@ public class NewsletterDataStore {
 	}
 
 	public static void addSubcriber(final Subscriber aSubcriber) {
+		checkNotNull(aSubcriber, "No NULL value allowed");
 		subcribers.add(aSubcriber);
 	}
 
@@ -58,6 +62,7 @@ public class NewsletterDataStore {
 	}
 
 	public static void addCategory(final Category aCategory) {
+		checkNotNull(aCategory, "No NULL value allowed");
 		// TODO: check overwriting existing category, handle consistently
 		categories.put(aCategory.getCode(), aCategory);
 	}
@@ -68,13 +73,40 @@ public class NewsletterDataStore {
 	 * @param categoryCodes
 	 *            to filter
 	 * @return a list of categories
+	 * @throws NullPointerException
+	 *             if category codes is null
 	 */
 	public static List<Category> getCategoriesByCodes(final List<String> categoryCodes) {
-		if (categoryCodes == null) {
-			return Collections.emptyList();
-		}
+		checkNotNull(categoryCodes, "No NULL value allowed");
 
 		return categories.values().parallelStream().filter(category -> categoryCodes.contains(category.getCode())).collect(Collectors.toList());
+	}
+
+	/**
+	 *
+	 * @param categories
+	 * @return
+	 * @throws NullPointerException
+	 *             if category list is null
+	 * @throws IllegalArgumentException
+	 *             if category list is empty
+	 */
+	public static List<Book> getBooksByCategories(final List<Category> categories) {
+		checkNotNull(categories, "No NULL value allowed");
+		checkArgument(!categories.isEmpty(), "No empty category list allowed");
+
+		/*
+		 * match the category path to the given category list elements
+		 */
+		final Predicate<Category> categoryPathMatcher = categoryPath -> categories.contains(categoryPath);
+		/*
+		 * match any of the path category list to the given category list elements
+		 */
+		final Predicate<List<Category>> categoryPathListMatcher = categoryPathList -> categoryPathList.parallelStream().anyMatch(categoryPathMatcher);
+
+		return books.parallelStream()
+		        .filter(book -> book.getCategoryCodes().parallelStream().map(category -> category.getCategoryPath()).anyMatch(categoryPathListMatcher))
+		        .collect(Collectors.toList());
 	}
 
 	public static List<Book> getBooks() {
@@ -82,6 +114,7 @@ public class NewsletterDataStore {
 	}
 
 	public static void addBook(final Book aBook) {
+		checkNotNull(aBook, "No NULL value allowed");
 		books.add(aBook);
 	}
 }

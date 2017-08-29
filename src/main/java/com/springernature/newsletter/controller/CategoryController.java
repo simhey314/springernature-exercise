@@ -18,11 +18,14 @@
  */
 package com.springernature.newsletter.controller;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.base.Strings;
 import com.springernature.newsletter.data.NewsletterDataStore;
 import com.springernature.newsletter.model.Category;
 
@@ -71,6 +74,10 @@ public class CategoryController {
 	 */
 	@RequestMapping(path = "/categories", method = RequestMethod.POST)
 	public void addCategory(@RequestBody(required = true) final CategoryInput input) {
+		checkArgument(!Strings.isNullOrEmpty(input.getCode()), "No empty code allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getCode().trim()), "No whitespace code allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle()), "No empty title allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle().trim()), "No whitespace title allowed");
 
 		final Category newCategory = new Category(input.getCode(), input.getTitle(), NewsletterDataStore.getCategories().get(input.getSuperCategoryCode()));
 		NewsletterDataStore.addCategory(newCategory);

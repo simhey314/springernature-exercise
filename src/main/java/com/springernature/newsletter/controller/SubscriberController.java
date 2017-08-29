@@ -21,6 +21,7 @@ package com.springernature.newsletter.controller;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.base.Strings;
 import com.springernature.newsletter.data.NewsletterDataStore;
 import com.springernature.newsletter.model.Category;
 import com.springernature.newsletter.model.Subscriber;
@@ -38,7 +40,7 @@ import com.springernature.newsletter.model.Subscriber;
  * @since v0.0.1
  */
 @RestController
-public class SubcriberController {
+public class SubscriberController {
 
 	public static class SubcriberInput {
 		private String email;
@@ -63,6 +65,8 @@ public class SubcriberController {
 		}
 	}
 
+	public static final String REQUEST_PATH_SUBSCRIBER = "/subscribers";
+
 	/**
 	 * create a new subscriber model data from input and add all existing category models by the input codes
 	 *
@@ -70,10 +74,12 @@ public class SubcriberController {
 	 *            json data
 	 * @return a new subscriber model
 	 */
-	@RequestMapping(path = "/subscribers", method = RequestMethod.POST)
+	@RequestMapping(path = REQUEST_PATH_SUBSCRIBER, method = RequestMethod.POST)
 	public void addSubscriber(@RequestBody(required = true) final SubcriberInput input) {
 		checkNotNull(input.getCategoryCodes(), "No NULL value allowed");
 		checkArgument(!input.categoryCodes.isEmpty(), "No empty category code list allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getEmail()), "No empty email allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getEmail().trim()), "No whitespace email allowed");
 
 		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.getCategoryCodes());
 		final Subscriber newSubscriber = new Subscriber(input.getEmail(), categories);

@@ -18,6 +18,9 @@
  */
 package com.springernature.newsletter.controller;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.base.Strings;
 import com.springernature.newsletter.data.NewsletterDataStore;
 import com.springernature.newsletter.model.Book;
 import com.springernature.newsletter.model.Category;
-
-import static com.google.common.base.Preconditions.*;
 /**
  * @author Simon Heyden <simon@family-heyden.net>
  *
@@ -37,6 +39,8 @@ import static com.google.common.base.Preconditions.*;
  */
 @RestController
 public class BookController {
+
+	public static final String REQUEST_PATH_BOOKS = "/books";
 
 	public static class BookInput {
 		private List<String> categoryCodes;
@@ -66,11 +70,13 @@ public class BookController {
 	 * @param input
 	 * @return a new book
 	 */
-	@RequestMapping(path = "/books", method = RequestMethod.POST)
+	@RequestMapping(path = REQUEST_PATH_BOOKS, method = RequestMethod.POST)
 	public void addBook(@RequestBody(required = true) final BookInput input) {
 		checkNotNull(input.getCategoryCodes(), "No NULL value allowed");
 		checkArgument(!input.categoryCodes.isEmpty(), "No empty category code list allowed");
-				
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle()), "No empty title allowed");
+		checkArgument(!Strings.isNullOrEmpty(input.getTitle().trim()), "No whitespace title allowed");
+
 		final List<Category> categories = NewsletterDataStore.getCategoriesByCodes(input.categoryCodes);
 		final Book newBook = new Book(input.getTitle(), categories);
 

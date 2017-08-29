@@ -18,12 +18,15 @@
  */
 package com.springernature.newsletter.model;
 
-import java.util.Collections;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.base.Strings;
+import com.springernature.newsletter.data.NewsletterDataStore;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -33,12 +36,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public class Subscriber {
 
 	@JsonProperty("recipient”")
-	private String email;
-	
+	private final String email;
+
 	@JsonIgnore
-	private List<Category> categoryCodes;
+	private final List<Category> categoryCodes;
 
 	public Subscriber(final String emailAdress, final List<Category> categoryCodes) {
+		checkArgument(!Strings.isNullOrEmpty(emailAdress), "No empty email allowed");
+		checkArgument(!Strings.isNullOrEmpty(emailAdress.trim()), "No whitespace email allowed");
+
 		email = emailAdress;
 		this.categoryCodes = categoryCodes;
 	}
@@ -50,10 +56,10 @@ public class Subscriber {
 	public List<Category> getCategoryCode() {
 		return categoryCodes;
 	}
-	
+
 	@JsonProperty("notifications")
 	@JsonValue
 	public List<Book> getNotifications(){
-		return Collections.emptyList();
+		return NewsletterDataStore.getBooksByCategories(categoryCodes);
 	}
 }

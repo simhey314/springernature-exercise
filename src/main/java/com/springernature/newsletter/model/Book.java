@@ -18,13 +18,12 @@
  */
 package com.springernature.newsletter.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.base.Strings;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -32,15 +31,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since v0.0.1
  */
 public class Book {
-	
+
 	@JsonProperty("book")
-	private String title;
-	
-	@JsonIgnore
-	private List<Category> categoryCodes;
+	private final String title;
+
+	@JsonProperty("categoryPaths")
+	private final List<Category> categoryCodes;
 
 	public Book(final String title, final List<Category> categoryCodes) {
-		super();
+		checkArgument(!Strings.isNullOrEmpty(title), "No empty title allowed");
+		checkArgument(!Strings.isNullOrEmpty(title.trim()), "No whitespace title allowed");
+
 		this.title = title;
 		this.categoryCodes = categoryCodes;
 	}
@@ -51,16 +52,5 @@ public class Book {
 
 	public List<Category> getCategoryCodes() {
 		return categoryCodes;
-	}
-	
-	@JsonProperty("categoryPaths")
-	@JsonValue
-	public List<List<String>> getCategoryPaths(){
-		List<List<String>> result = new ArrayList<>();
-		
-		
-		
-		
-		return result;
 	}
 }

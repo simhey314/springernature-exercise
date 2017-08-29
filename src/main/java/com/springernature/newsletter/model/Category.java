@@ -18,8 +18,17 @@
  */
 package com.springernature.newsletter.model;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.base.Strings;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -27,18 +36,24 @@ import java.util.List;
  * @since v0.0.1
  */
 public class Category {
+
+	@JsonIgnore
 	private final String code;
+	@JsonIgnore
 	private final String title;
-	private Category parent;
+	@JsonIgnore
+	private final Category parent;
 
 	public Category(final String code, final String title) {
-		super();
-		this.code = code;
-		this.title = title;
+		this(code, title, null);
 	}
 
 	public Category(final String code, final String title, final Category parent) {
-		super();
+		checkArgument(!Strings.isNullOrEmpty(code), "No empty code allowed");
+		checkArgument(!Strings.isNullOrEmpty(code.trim()), "No whitespace code allowed");
+		checkArgument(!Strings.isNullOrEmpty(title), "No empty title allowed");
+		checkArgument(!Strings.isNullOrEmpty(title.trim()), "No whitespace title allowed");
+
 		this.code = code;
 		this.title = title;
 		this.parent = parent;
@@ -55,14 +70,22 @@ public class Category {
 	public String getCode() {
 		return code;
 	}
-	
+
 	public List<Category> getCategoryPath(){
-		List<Category> result = new ArrayList<>();
+		final List<Category> result = new ArrayList<>();
 		result.add(this);
 		if (parent != null) {
 			result.addAll(parent.getCategoryPath());
 		}
 		return result;
+	}
+
+	@JsonProperty("categoryPaths")
+	@JsonValue
+	public List<String> getCategoryPathStringList(){
+		final List<Category> pathList = getCategoryPath();
+		Collections.reverse(pathList);
+		return pathList.parallelStream().map(category -> category.getTitle()).collect(Collectors.toList());
 	}
 
 	@Override
