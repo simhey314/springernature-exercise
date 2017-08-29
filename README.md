@@ -68,11 +68,11 @@ Choose one possible way to start the newsletter web service
 
 * IDE
     * Run the project (com.springernature.newsletter.NewsletterApplication) class as a _Spring Boot Application_
-* Build/ JAR File
+* Build/ JAR File (installed maven required)
     * open the command line at project root
     * _mvnw clean package_
     * _java -jar target/newsletter-0.1.0.jar_
-* Maven run
+* Maven run (installed maven required)
     * open the command line at project root
     * _mvnw spring-boot:run_
 
