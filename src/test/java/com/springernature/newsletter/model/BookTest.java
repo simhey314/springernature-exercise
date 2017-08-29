@@ -20,13 +20,13 @@ package com.springernature.newsletter.model;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import com.springernature.newsletter.TestHelper;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -38,8 +38,7 @@ public class BookTest {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
-	private static final List<Category> CATEGORY_CODES = Arrays.asList(new Category("1", "1"));
-	private static final String TITLE = "title";
+	public static final String TITLE = "title";
 
 	/**
 	 * Test method for {@link com.springernature.newsletter.model.Book#Book(java.lang.String, java.util.List)}.
@@ -49,7 +48,7 @@ public class BookTest {
 		exception.expect(NullPointerException.class);
 		exception.expectMessage(is(Book.NO_NULL_TITLE));
 
-		new Book(null, CATEGORY_CODES);
+		new Book(null, TestHelper.CATEGORY_CODES);
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class BookTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Book.NO_EMPTY_TITLE_ALLOWED));
 
-		new Book("", CATEGORY_CODES);
+		new Book("", TestHelper.CATEGORY_CODES);
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class BookTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Book.NO_WHITESPACE_TITLE_ALLOWED));
 
-		new Book("   ", CATEGORY_CODES);
+		new Book("   ", TestHelper.CATEGORY_CODES);
 	}
 
 	/**

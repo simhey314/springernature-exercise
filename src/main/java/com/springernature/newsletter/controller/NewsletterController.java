@@ -35,7 +35,9 @@ import com.springernature.newsletter.model.Subscriber;
 @RestController
 public class NewsletterController {
 
-	@RequestMapping(path = "/newsletters", method = RequestMethod.GET)
+	public static final String REQUEST_PATH_NEWSLETTERS = "/newsletters";
+
+	@RequestMapping(path = REQUEST_PATH_NEWSLETTERS, method = RequestMethod.GET)
 	public List<Subscriber> getNewsletters() {
 		return NewsletterDataStore.getSubcribers();
 	}

@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.springernature.newsletter.NewsletterApplication;
+import com.springernature.newsletter.TestHelper;
 import com.springernature.newsletter.data.NewsletterDataStore;
 import com.springernature.newsletter.model.Category;
 
@@ -70,18 +71,18 @@ public class BookControllerTest {
 	public void testAddBook() throws Exception {
 		setUp();
 
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_COMPLETE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_COMPLETE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		        .andExpect(status().isOk());
 
 		mockMvc.perform(get(BookController.REQUEST_PATH_BOOKS)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS)).andExpect(status().is4xxClientError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_NULL_CATEGORIES).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_CATEGORIES).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_TITLE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_EMPTY_TITLE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_WHITSPACES_TITLE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(BookController.REQUEST_PATH_BOOKS).content(BOOK_JSON_WHITSPACES_TITLE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 	}
 

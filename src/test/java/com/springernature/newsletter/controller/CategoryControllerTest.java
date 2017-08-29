@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.springernature.newsletter.NewsletterApplication;
+import com.springernature.newsletter.TestHelper;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -69,27 +70,27 @@ public class CategoryControllerTest {
 	public void testAddCategory() throws Exception {
 		setUp();
 
-		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_COMPLETE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_COMPLETE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().isOk());
 
 		mockMvc.perform(get(CategoryController.REQUEST_PATH_CATEGORIES)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES)).andExpect(status().is4xxClientError());
 		mockMvc.perform(
-				post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_NULL_CATEGORY).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+				post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_NULL_CATEGORY).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().isOk());
 
 		mockMvc.perform(
-		        post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_EMPTY_CATEGORY).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		        post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_EMPTY_CATEGORY).contentType(TestHelper.CONTENT_TYPE_JSON))
 		        .andExpect(status().is4xxClientError());
-		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_EMPTY_TITLE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_EMPTY_TITLE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 		mockMvc.perform(
-				post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_WHITSPACES_TITLE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+				post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_WHITSPACES_TITLE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_EMPTY_CODE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_EMPTY_CODE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 		mockMvc.perform(
-				post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_WHITSPACES_CODE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+				post(CategoryController.REQUEST_PATH_CATEGORIES).content(CATEGORY_JSON_WHITSPACES_CODE).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 	}
 

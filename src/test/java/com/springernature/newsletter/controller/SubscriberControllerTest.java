@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.springernature.newsletter.NewsletterApplication;
+import com.springernature.newsletter.TestHelper;
 import com.springernature.newsletter.data.NewsletterDataStore;
 import com.springernature.newsletter.model.Category;
 
@@ -76,18 +77,18 @@ public class SubscriberControllerTest {
 	public void testAddSubscriber() throws Exception {
 		setUp();
 
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_COMPLETE).contentType(ControllerTestHelper.CONTENT_TYPE_JSON)).andExpect(status().isOk());
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_COMPLETE).contentType(TestHelper.CONTENT_TYPE_JSON)).andExpect(status().isOk());
 
 		mockMvc.perform(get(SubscriberController.REQUEST_PATH_SUBSCRIBER)).andExpect(status().is4xxClientError());
 		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER)).andExpect(status().is4xxClientError());
 
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_CATEGORIES).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_EMPTY_CATEGORIES).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_EMPTY_CATEGORIES).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_EMAIL).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_NULL_EMAIL).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
-		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_WHITESPACES_EMAIL).contentType(ControllerTestHelper.CONTENT_TYPE_JSON))
+		mockMvc.perform(post(SubscriberController.REQUEST_PATH_SUBSCRIBER).content(JSON_WHITESPACES_EMAIL).contentType(TestHelper.CONTENT_TYPE_JSON))
 		.andExpect(status().is4xxClientError());
 	}
 

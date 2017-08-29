@@ -18,9 +18,6 @@
  */
 package com.springernature.newsletter.data;
 
-import static com.springernature.newsletter.data.NewsletterDataStoreTestHelper.CATEGORY_CODE_01;
-import static com.springernature.newsletter.data.NewsletterDataStoreTestHelper.CATEGORY_CODE_03_2;
-import static com.springernature.newsletter.data.NewsletterDataStoreTestHelper.setUpDatastore;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
@@ -36,6 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.springernature.newsletter.TestHelper;
 import com.springernature.newsletter.model.Category;
 
 /**
@@ -56,7 +54,7 @@ public class NewsletterDataStoreTest {
 	 */
 	@Test
 	public void testCategoriesByCodesEmptyFilterList() {
-		setUpDatastore();
+		TestHelper.setUpDatastore();
 
 		final List<?> toTestData = NewsletterDataStore.getCategoriesByCodes(new ArrayList<>());
 
@@ -69,7 +67,7 @@ public class NewsletterDataStoreTest {
 	 */
 	@Test
 	public void testCategoriesByCodesNoMatch() {
-		setUpDatastore();
+		TestHelper.setUpDatastore();
 
 		final List<Category> toTestData = NewsletterDataStore.getCategoriesByCodes(Arrays.asList(CATEGORY_CODE_EMPTY, CATEGORY_CODE_NO_MATCH));
 
@@ -82,14 +80,14 @@ public class NewsletterDataStoreTest {
 	 */
 	@Test
 	public void testCategoriesByCodesMatches() {
-		setUpDatastore();
+		TestHelper.setUpDatastore();
 
-		final List<Category> toTestData = NewsletterDataStore.getCategoriesByCodes(Arrays.asList(CATEGORY_CODE_01, CATEGORY_CODE_03_2, CATEGORY_CODE_NO_MATCH));
+		final List<Category> toTestData = NewsletterDataStore.getCategoriesByCodes(Arrays.asList(TestHelper.CATEGORY_CODE_01, TestHelper.CATEGORY_CODE_03_2, CATEGORY_CODE_NO_MATCH));
 
 		assertFalse(toTestData == null);
 		assertEquals(2, toTestData.size());
-		assertThat(toTestData.get(0).getCode(), anyOf(is(CATEGORY_CODE_01), is(CATEGORY_CODE_03_2)));
-		assertThat(toTestData.get(1).getCode(), anyOf(is(CATEGORY_CODE_01), is(CATEGORY_CODE_03_2)));
+		assertThat(toTestData.get(0).getCode(), anyOf(is(TestHelper.CATEGORY_CODE_01), is(TestHelper.CATEGORY_CODE_03_2)));
+		assertThat(toTestData.get(1).getCode(), anyOf(is(TestHelper.CATEGORY_CODE_01), is(TestHelper.CATEGORY_CODE_03_2)));
 	}
 
 	/**

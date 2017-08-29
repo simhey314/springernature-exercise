@@ -20,13 +20,13 @@ package com.springernature.newsletter.model;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import com.springernature.newsletter.TestHelper;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -38,9 +38,6 @@ public class SubscriberTest {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
-	private static final List<Category> CATEGORY_CODES = Arrays.asList(new Category("1", "1"));
-	private static final String EMAIL = "muster@email.de";
-
 	/**
 	 * Test method for {@link com.springernature.newsletter.model.Subscriber#Subscriber(java.lang.String, java.util.List)}.
 	 */
@@ -49,7 +46,7 @@ public class SubscriberTest {
 		exception.expect(NullPointerException.class);
 		exception.expectMessage(is(Subscriber.NO_NULL_EMAIL));
 
-		new Subscriber(null, CATEGORY_CODES);
+		new Subscriber(null, TestHelper.CATEGORY_CODES);
 	}
 
 	/**
@@ -60,7 +57,7 @@ public class SubscriberTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Subscriber.NO_EMPTY_EMAIL));
 
-		new Subscriber("", CATEGORY_CODES);
+		new Subscriber("", TestHelper.CATEGORY_CODES);
 	}
 
 	/**
@@ -71,7 +68,7 @@ public class SubscriberTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Subscriber.NO_WHITESPACE_EMAIL));
 
-		new Subscriber("   ", CATEGORY_CODES);
+		new Subscriber("   ", TestHelper.CATEGORY_CODES);
 	}
 
 	/**
@@ -82,7 +79,7 @@ public class SubscriberTest {
 		exception.expect(NullPointerException.class);
 		exception.expectMessage(is(Subscriber.NO_NULL_CATEGORIES));
 
-		new Subscriber(EMAIL, null);
+		new Subscriber(TestHelper.EMAIL, null);
 	}
 
 	/**
@@ -93,7 +90,7 @@ public class SubscriberTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Subscriber.NO_EMPTY_CATEGORIES));
 
-		new Subscriber(EMAIL, Collections.emptyList());
+		new Subscriber(TestHelper.EMAIL, Collections.emptyList());
 	}
 
 }

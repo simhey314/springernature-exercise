@@ -28,6 +28,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.springernature.newsletter.TestHelper;
+
 /**
  * @author Simon Heyden <simon@family-heyden.net>
  *
@@ -38,22 +40,14 @@ public class CategoryTest {
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
 
-	private static final String TITLE_VALUE = "title value";
-	private static final String TITLE_FIRST = "title value first";
-	private static final String TITLE_MIDDLE = "title value middle";
-	private static final String TITLE_LAST = "title value last";
-	private static final String CODE_VALUE = "code value";
-	private static final String CODE_THREE = "code value three";
-	private static final String CODE_TWO = "code value two";
-	private static final String CODE_ONE = "code value one";
 	private Category rootCategory;
 	private Category middleCategory;
 	private Category lastCategory;
 
 	private void setUp() {
-		rootCategory = new Category(CODE_ONE, TITLE_FIRST);
-		middleCategory = new Category(CODE_TWO, TITLE_MIDDLE, rootCategory);
-		lastCategory = new Category(CODE_THREE, TITLE_LAST, middleCategory);
+		rootCategory = new Category(TestHelper.CODE_ONE, TestHelper.TITLE_FIRST);
+		middleCategory = new Category(TestHelper.CODE_TWO, TestHelper.TITLE_MIDDLE, rootCategory);
+		lastCategory = new Category(TestHelper.CODE_THREE, TestHelper.TITLE_LAST, middleCategory);
 	}
 
 	/**
@@ -64,7 +58,7 @@ public class CategoryTest {
 		exception.expect(NullPointerException.class);
 		exception.expectMessage(is(Category.NO_NULL_TITLE_ALLOWED));
 
-		new Category(CODE_ONE, null);
+		new Category(TestHelper.CODE_ONE, null);
 	}
 
 	/**
@@ -75,7 +69,7 @@ public class CategoryTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Category.NO_WHITESPACE_TITLE_ALLOWED));
 
-		new Category(CODE_ONE, "   ");
+		new Category(TestHelper.CODE_ONE, "   ");
 	}
 
 	/**
@@ -86,7 +80,7 @@ public class CategoryTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Category.NO_EMPTY_TITLE_ALLOWED));
 
-		new Category(CODE_ONE, "");
+		new Category(TestHelper.CODE_ONE, "");
 	}
 
 	/**
@@ -97,7 +91,7 @@ public class CategoryTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Category.NO_EMPTY_CODE_ALLOWED));
 
-		new Category("", TITLE_VALUE);
+		new Category("", TestHelper.TITLE_VALUE);
 	}
 
 	/**
@@ -108,7 +102,7 @@ public class CategoryTest {
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage(is(Category.NO_WHITESPACE_CODE_ALLOWED));
 
-		new Category("   ", TITLE_VALUE);
+		new Category("   ", TestHelper.TITLE_VALUE);
 	}
 
 	/**
@@ -119,7 +113,7 @@ public class CategoryTest {
 		exception.expect(NullPointerException.class);
 		exception.expectMessage(is(Category.NO_NULL_CODE_ALLOWED));
 
-		new Category(null, TITLE_VALUE);
+		new Category(null, TestHelper.TITLE_VALUE);
 	}
 
 	/**
@@ -172,9 +166,9 @@ public class CategoryTest {
 	 */
 	@Test
 	public void testToString() {
-		final Category toTest = new Category(CODE_VALUE, TITLE_VALUE);
+		final Category toTest = new Category(TestHelper.CODE_VALUE, TestHelper.TITLE_VALUE);
 
-		assertEquals(TITLE_VALUE, toTest.getTitle());
+		assertEquals(TestHelper.TITLE_VALUE, toTest.getTitle());
 		assertEquals(toTest.getTitle(), toTest.toString());
 	}
 
@@ -189,9 +183,9 @@ public class CategoryTest {
 
 		assertFalse(stringPathList == null);
 		assertEquals(3, stringPathList.size());
-		assertEquals(TITLE_FIRST, stringPathList.get(0));
-		assertEquals(TITLE_MIDDLE, stringPathList.get(1));
-		assertEquals(TITLE_LAST, stringPathList.get(2));
+		assertEquals(TestHelper.TITLE_FIRST, stringPathList.get(0));
+		assertEquals(TestHelper.TITLE_MIDDLE, stringPathList.get(1));
+		assertEquals(TestHelper.TITLE_LAST, stringPathList.get(2));
 	}
 
 	/**
@@ -205,8 +199,8 @@ public class CategoryTest {
 
 		assertFalse(stringPathList == null);
 		assertEquals(2, stringPathList.size());
-		assertEquals(TITLE_FIRST, stringPathList.get(0));
-		assertEquals(TITLE_MIDDLE, stringPathList.get(1));
+		assertEquals(TestHelper.TITLE_FIRST, stringPathList.get(0));
+		assertEquals(TestHelper.TITLE_MIDDLE, stringPathList.get(1));
 	}
 
 	/**
@@ -220,6 +214,6 @@ public class CategoryTest {
 
 		assertFalse(stringPathList == null);
 		assertEquals(1, stringPathList.size());
-		assertEquals(TITLE_FIRST, stringPathList.get(0));
+		assertEquals(TestHelper.TITLE_FIRST, stringPathList.get(0));
 	}
 }
