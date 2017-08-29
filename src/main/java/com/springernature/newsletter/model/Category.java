@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Strings;
 
 /**
@@ -59,18 +58,22 @@ public class Category {
 		this.parent = parent;
 	}
 
+	@JsonIgnore
 	public String getTitle() {
 		return title;
 	}
 
+	@JsonIgnore
 	public Category getParent() {
 		return parent;
 	}
 
+	@JsonIgnore
 	public String getCode() {
 		return code;
 	}
 
+	@JsonIgnore
 	public List<Category> getCategoryPath(){
 		final List<Category> result = new ArrayList<>();
 		result.add(this);
@@ -81,7 +84,6 @@ public class Category {
 	}
 
 	@JsonProperty("categoryPaths")
-	@JsonValue
 	public List<String> getCategoryPathStringList(){
 		final List<Category> pathList = getCategoryPath();
 		Collections.reverse(pathList);
@@ -89,6 +91,7 @@ public class Category {
 	}
 
 	@Override
+	@JsonIgnore
 	public String toString() {
 		return title;
 	}

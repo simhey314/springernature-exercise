@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 
@@ -46,10 +47,12 @@ public class Book {
 		this.categoryCodes = categoryCodes;
 	}
 
+	@JsonIgnore
 	public String getTitle() {
 		return title;
 	}
 
+	@JsonIgnore
 	public List<Category> getCategoryCodes() {
 		return categoryCodes;
 	}

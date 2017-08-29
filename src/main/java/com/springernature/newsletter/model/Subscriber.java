@@ -24,7 +24,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Strings;
 import com.springernature.newsletter.data.NewsletterDataStore;
 
@@ -35,7 +34,7 @@ import com.springernature.newsletter.data.NewsletterDataStore;
  */
 public class Subscriber {
 
-	@JsonProperty("recipient”")
+	@JsonProperty("recipient")
 	private final String email;
 
 	@JsonIgnore
@@ -49,16 +48,16 @@ public class Subscriber {
 		this.categoryCodes = categoryCodes;
 	}
 
+	@JsonIgnore
 	public String getEmailAdress() {
 		return email;
 	}
 
+	@JsonIgnore
 	public List<Category> getCategoryCode() {
 		return categoryCodes;
 	}
 
-	@JsonProperty("notifications")
-	@JsonValue
 	public List<Book> getNotifications(){
 		return NewsletterDataStore.getBooksByCategories(categoryCodes);
 	}
