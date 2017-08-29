@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.springernature.newsletter.NewsletterApplication;
+import com.springernature.newsletter.TestHelper;
 import com.springernature.newsletter.data.NewsletterDataStore;
 
 /**
@@ -47,6 +48,56 @@ import com.springernature.newsletter.data.NewsletterDataStore;
 public class NewsletterControllerTest {
 
 	private static final String RESPONSE_JSON_EMPTY = "[]";
+
+	// @format:off
+	private static final String RESPONSE_JSON_COMPLETE = "[{\r\n" +
+			"	\"notifications\": [{\r\n" +
+			"		\"book\": \"book title2\",\r\n" +
+			"		\"categoryPaths\": [{\r\n" +
+			"			\"categoryPaths\": [\r\n" +
+			"			\"cat title1\",\r\n" +
+			"			\"cat title2\",\r\n" +
+			"			\"cat title3.1\"]\r\n" +
+			"		},\r\n" +
+			"		{\r\n" +
+			"			\"categoryPaths\": [\r\n" +
+			"			\"cat title1\",\r\n" +
+			"			\"cat title2\",\r\n" +
+			"			\"cat title3.2\",\r\n" +
+			"			\"cat title4.2\"]\r\n" +
+			"		}]\r\n" +
+			"	}],\r\n" +
+			"	\"recipient\": \"muster@email.de\"\r\n" +
+			"},\r\n" +
+			"{\r\n" +
+			"	\"notifications\": [{\r\n" +
+			"		\"book\": \"book title2\",\r\n" +
+			"		\"categoryPaths\": [{\r\n" +
+			"			\"categoryPaths\": [\"cat title1\",\r\n" +
+			"			\"cat title2\",\r\n" +
+			"			\"cat title3.1\"]\r\n" +
+			"		},\r\n" +
+			"		{\r\n" +
+			"			\"categoryPaths\": [\r\n" +
+			"			\"cat title1\",\r\n" +
+			"			\"cat title2\",\r\n" +
+			"			\"cat title3.2\",\r\n" +
+			"			\"cat title4.2\"]\r\n" +
+			"		}]\r\n" +
+			"	},\r\n" +
+			"	{\r\n" +
+			"		\"book\": \"book title1\",\r\n" +
+			"		\"categoryPaths\": [{\r\n" +
+			"			\"categoryPaths\": [\r\n" +
+			"			\"cat title1\",\r\n" +
+			"			\"cat title2\",\r\n" +
+			"			\"cat title3.2\"]\r\n" +
+			"		}]\r\n" +
+			"	}],\r\n" +
+			"	\"recipient\": \"max@email.de\"\r\n" +
+			"}]";
+	// @format:on
+
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 	private MockMvc mockMvc;
@@ -75,7 +126,9 @@ public class NewsletterControllerTest {
 	public void testGetNewslettersCompleteData() throws Exception {
 		setUp();
 
+		TestHelper.setUpDataStoreComplete();
+
 		mockMvc.perform(get(NewsletterController.REQUEST_PATH_NEWSLETTERS)).andExpect(status().is2xxSuccessful())
-		        .andExpect(content().json(RESPONSE_JSON_EMPTY));
+		.andExpect(content().json(RESPONSE_JSON_COMPLETE));
 	}
 }

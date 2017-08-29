@@ -25,7 +25,9 @@ import java.util.List;
 import org.springframework.http.MediaType;
 
 import com.springernature.newsletter.data.NewsletterDataStore;
+import com.springernature.newsletter.model.Book;
 import com.springernature.newsletter.model.Category;
+import com.springernature.newsletter.model.Subscriber;
 
 /**
  * @author Simon Heyden <simon@family-heyden.net>
@@ -35,17 +37,18 @@ import com.springernature.newsletter.model.Category;
 public class TestHelper {
 
 	public static final String EMAIL = "muster@email.de";
+	public static final String EMAIL_02 = "max@email.de";
 
-	public static final String CATEGORY_CODE_01 = "code1";
-	public static final String CATEGORY_CODE_02 = "code2";
-	public static final String CATEGORY_CODE_03_1 = "code3.1";
-	public static final String CATEGORY_CODE_03_2 = "code3.2";
-	public static final String CATEGORY_CODE_04_2 = "code4.2";
-	public static final String CATEGORY_TITLE_01 = "title1";
-	public static final String CATEGORY_TITLE_02 = "title2";
-	public static final String CATEGORY_TITLE_03_1 = "title3.1";
-	public static final String CATEGORY_TITLE_03_2 = "title3.2";
-	public static final String CATEGORY_TITLE_04_2 = "title4.2";
+	public static final String CATEGORY_CODE_01 = "cat code1";
+	public static final String CATEGORY_CODE_02 = "cat code2";
+	public static final String CATEGORY_CODE_03_1 = "cat code3.1";
+	public static final String CATEGORY_CODE_03_2 = "cat code3.2";
+	public static final String CATEGORY_CODE_04_2 = "cat code4.2";
+	public static final String CATEGORY_TITLE_01 = "cat title1";
+	public static final String CATEGORY_TITLE_02 = "cat title2";
+	public static final String CATEGORY_TITLE_03_1 = "cat title3.1";
+	public static final String CATEGORY_TITLE_03_2 = "cat title3.2";
+	public static final String CATEGORY_TITLE_04_2 = "cat title4.2";
 
 	public static final String TITLE_VALUE = CATEGORY_TITLE_01;
 	public static final String TITLE_FIRST = CATEGORY_TITLE_01;
@@ -56,6 +59,9 @@ public class TestHelper {
 	public static final String CODE_TWO = CATEGORY_CODE_02;
 	public static final String CODE_ONE = CATEGORY_CODE_01;
 
+	public static final String BOOK_TITLE_01 = "book title1";
+	public static final String BOOK_TITLE_02 = "book title2";
+
 	public static final Category CATEGORY = new Category(CATEGORY_CODE_01, CATEGORY_TITLE_01);
 	public static final List<Category> CATEGORY_CODES = Arrays.asList(CATEGORY);
 
@@ -65,6 +71,27 @@ public class TestHelper {
 	public static void setUpDatastore() {
 		NewsletterDataStore.resetData();
 		addCategories();
+	}
+
+	public static void setUpDataStoreComplete() {
+		addCategories();
+		addSubscribers();
+		addBooks();
+	}
+
+	private static void addBooks() {
+		List<Category> caategoryCodes = Arrays.asList(NewsletterDataStore.getCategories().get(CATEGORY_CODE_03_1),
+				NewsletterDataStore.getCategories().get(CATEGORY_CODE_04_2));
+		NewsletterDataStore.addBook(new Book(BOOK_TITLE_02, caategoryCodes));
+		caategoryCodes = Arrays.asList(NewsletterDataStore.getCategories().get(CATEGORY_CODE_03_2));
+		NewsletterDataStore.addBook(new Book(BOOK_TITLE_01, caategoryCodes));
+	}
+
+	private static void addSubscribers() {
+		List<Category> caategoryCodes = Arrays.asList(NewsletterDataStore.getCategories().get(CATEGORY_CODE_04_2));
+		NewsletterDataStore.addSubscriber(new Subscriber(EMAIL, caategoryCodes));
+		caategoryCodes = Arrays.asList(NewsletterDataStore.getCategories().get(CATEGORY_CODE_02));
+		NewsletterDataStore.addSubscriber(new Subscriber(EMAIL_02, caategoryCodes));
 	}
 
 	public static void addCategories() {
